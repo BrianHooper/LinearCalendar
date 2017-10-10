@@ -1,12 +1,13 @@
 import java.util.Date;
 import java.text.ParseException;
 
+@SuppressWarnings("CanBeFinal")
+
 class Event implements Comparable<Event> {
 	private Date date, time;
 	private String name, location;
 	private int id;
-	
-	private final int nameLength = 30;
+
 	
 	public Event() {
 		this.id = Standard.getNewId();
@@ -46,12 +47,11 @@ class Event implements Comparable<Event> {
 	Returns the name field formatted to the number of characters specified in nameLength
 	 */
 	public String getShortName() {
+        int nameLength = 30;
 		String str = name;
 		
 		if(str.length() < nameLength) {
-			for(int i = str.length(); i < nameLength; i++) {
-				str = str + " ";
-			}
+            str = String.format("%1$-" + nameLength + "s", str);
 		} else {
 			str = str.substring(0,nameLength - 4) + "...";
 		}
@@ -85,13 +85,7 @@ class Event implements Comparable<Event> {
 	Returns the event ID as a String with leading zeros
 	 */
 	public String getIdString() {
-		String str = String.valueOf(id);
-		
-		for(int i = str.length(); i < 4; i++) {
-			str = "0" + str;
-		}
-		
-		return str;
+		return String.format("%04d", id);
 	}
 
 	/*

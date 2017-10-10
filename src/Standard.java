@@ -3,13 +3,13 @@ import java.text.*;
 
 class Standard {
     // Default date formatter for input/output
-	public static SimpleDateFormat df = new SimpleDateFormat("dd/MM/yy");
+	public static final SimpleDateFormat df = new SimpleDateFormat("dd/MM/yy");
 
-    // Special date formatters for day/month/year/time user input
-	public static SimpleDateFormat dayFormat = new SimpleDateFormat("dd");
-	public static SimpleDateFormat monthFormat = new SimpleDateFormat("MM");
-	public static SimpleDateFormat yearFormat = new SimpleDateFormat("yy");
-	public static SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+    // Special date formatter's for day/month/year/time user input
+	public static final SimpleDateFormat dayFormat = new SimpleDateFormat("dd");
+	public static final SimpleDateFormat monthFormat = new SimpleDateFormat("MM");
+	public static final SimpleDateFormat yearFormat = new SimpleDateFormat("yy");
+	public static final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
 
 	// For assigning each event with a unique ID
 	private static int id;
@@ -23,13 +23,14 @@ class Standard {
 	/*
 	Prints the events to the console, sorted by date in ascending order
 	 */
-	public void print() {
+	private void print() {
 		Iterator<Event> iter = list.iterator();
 		
 		StringBuilder str = new StringBuilder();
 		
 		while(iter.hasNext()) {
-			str.append(iter.next().toString() + "\n");
+			str.append(iter.next().toString());
+			str.append("\n");
 		}
 		System.out.println(str);
 	}
@@ -56,20 +57,60 @@ class Standard {
 
 
 		Scanner scan = new Scanner(System.in);
-		list = new TreeSet<Event>();
-		
-		createEvent(scan);
-		//createEvent(scan);
-		
-		print();
+		list = new TreeSet<>();
+
+		boolean loopMenu = true;
+		while(loopMenu) {
+            System.out.println(generateMenu());
+            int userInput = -1;
+
+            try {
+                String input = scan.nextLine();
+                if(input.length() == 0) loopMenu = false;
+                else {
+                    userInput = Integer.parseInt(input);
+                }
+
+                switch (userInput) {
+                    case 0:
+                        print();
+                        break;
+                    case 1:
+                        createEvent(scan);
+                        break;
+                    case 2:
+                        // ToDo
+                        break;
+                    case 3:
+                        // Todo
+                        break;
+                    default:
+                        break;
+                }
+            } catch (InputMismatchException | NumberFormatException e) {
+                System.out.println("Error reading user input, exiting.");
+            }
+        }
 		
 		scan.close();
 	}
 
+	public String generateMenu() {
+	    String str = "What would you like to do?\n";
+
+	    str += "[0] View events\n";
+	    str += "[1] Create a new event\n";
+	    str += "[2] Modify an existing event\n";
+	    str += "[3] Delete an event\n";
+	    str += "[default] Exit\n";
+
+	    return str;
+    }
+
     /*
     Get user input from the console to create a new event
      */
-	public boolean createEvent(Scanner scan) {
+	public void createEvent(Scanner scan) {
         System.out.println("Default date: " + df.format(currentDate));
 	    Event event = new Event();
 
@@ -100,15 +141,11 @@ class Standard {
             } else {
                 System.out.println("Canceled adding event.");
                 Standard.cancelId();
-                return false;
             }
         } catch (NumberFormatException | ParseException g) {
             System.out.println("Error setting date/time");
             Standard.cancelId();
-            return false;
         }
-
-	    return true; // Event was added to the list
     }
 
     /*
@@ -117,12 +154,10 @@ class Standard {
     user does not enter a field.
      */
     public void SetEventDate(Event event, Scanner scan) throws NumberFormatException, ParseException{
-        int day = 0;
-        int month = 0;
-        int year = 0;
+        int day, month, year;
         String input;
 
-        // Get day from user, or use currrentDate if user input was blank
+        // Get day from user, or use currentDate if user input was blank
         System.out.print("Enter the day: ");
         input = scan.nextLine();
         if(input.length() != 0) day = Integer.parseInt(input);
@@ -149,8 +184,7 @@ class Standard {
     Sets event time to null if the user skips a field.
      */
     public void SetEventTime(Event event, Scanner scan) throws NumberFormatException, ParseException{
-        int hour = 0;
-        int minute = 0;
+        int hour, minute;
         String input;
 
         System.out.print("Enter the hour: ");
