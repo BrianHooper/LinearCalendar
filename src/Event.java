@@ -1,5 +1,4 @@
 import java.util.Date;
-import java.text.ParseException;
 
 @SuppressWarnings("CanBeFinal")
 
@@ -10,15 +9,18 @@ class Event implements Comparable<Event> {
 
 	
 	public Event() {
-		this.id = Standard.getNewId();
+		this.id = Settings.getNewId();
 	}
+
+	public Event(int identifier) {
+	    this.id = identifier;
+    }
 
 	/*
 	Formats and sets the date
 	 */
-	public void setDate(int day, int month, int year) throws ParseException{
-		String dateStr = String.valueOf(day) + "/" + String.valueOf(month) + "/" + String.valueOf(year);
-		this.date = Standard.df.parse(dateStr);
+	public void setDate(Date d){
+		this.date = d;
 	}
 
 	/*
@@ -26,7 +28,7 @@ class Event implements Comparable<Event> {
 	 */
 	public String getDate() {
 		if(this.date == null) return "";
-		else return Standard.df.format(date);
+		else return Settings.df.format(date);
 	}
 
 	/*
@@ -62,8 +64,8 @@ class Event implements Comparable<Event> {
 	/*
 	Formats and sets the time object
 	 */
-	public void setTime(int hour, int minute) throws ParseException{
-	    time = Standard.timeFormat.parse(hour + ":" + minute);
+	public void setTime(Date t) {
+	    this.time = t;
 	}
 
 	/*
@@ -71,7 +73,7 @@ class Event implements Comparable<Event> {
 	 */
 	public String getTime() {
 		if(time == null) return "";
-		else return Standard.timeFormat.format(time);
+		else return Settings.timeFormat.format(time);
 	}
 
 	/*
